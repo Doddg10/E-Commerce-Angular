@@ -1,17 +1,17 @@
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
-
-import { sellerAuthGuard } from './seller-auth.guard';
-
+import { sellerAuthGuard } from './seller-auth.guard'; 
 describe('sellerAuthGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => new sellerAuthGuard(...guardParameters));
+  let guard: sellerAuthGuard;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [sellerAuthGuard]  // Provide the guard for testing
+    });
+
+    guard = TestBed.inject(sellerAuthGuard);  // Inject the guard instance
   });
 
   it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+    expect(guard).toBeTruthy();  // Ensure the guard is created successfully
   });
 });

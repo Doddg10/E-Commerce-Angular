@@ -1,17 +1,18 @@
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
-
-import { customerAuthGuard } from './customer-auth.guard';
+import { customerAuthGuard } from './customer-auth.guard'; 
 
 describe('customerAuthGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => new customerAuthGuard(...guardParameters));
+  let guard: customerAuthGuard;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [customerAuthGuard]  // Provide the guard for testing
+    });
+
+    guard = TestBed.inject(customerAuthGuard);  // Inject the guard instance
   });
 
   it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+    expect(guard).toBeTruthy();  // Ensure the guard is created successfully
   });
 });

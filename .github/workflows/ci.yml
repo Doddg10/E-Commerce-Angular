@@ -27,4 +27,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: doddg10/angular-web:${{ github.sha:0:8 }}
+          tags: doddg10/angular-web:${{ github.sha.substr(0, 8) }}

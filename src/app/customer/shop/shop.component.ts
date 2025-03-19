@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../../models/dataTypes';
 import { ShopService } from '../../services/shop.service';
 
+
 @Component({
   selector: 'app-shop',
   templateUrl: './shop.component.html',

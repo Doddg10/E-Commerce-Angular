@@ -5,7 +5,7 @@ import { customerAuthGuard } from './customer-auth.guard';
 
 describe('customerAuthGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => customerAuthGuard(...guardParameters));
+      TestBed.runInInjectionContext(() => new customerAuthGuard(...guardParameters));
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

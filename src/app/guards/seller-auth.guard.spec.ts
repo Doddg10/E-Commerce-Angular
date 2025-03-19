@@ -5,7 +5,7 @@ import { sellerAuthGuard } from './seller-auth.guard';
 
 describe('sellerAuthGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => sellerAuthGuard(...guardParameters));
+      TestBed.runInInjectionContext(() => new sellerAuthGuard(...guardParameters));
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

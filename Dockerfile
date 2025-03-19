@@ -4,7 +4,7 @@ FROM node:23.10.0-alpine3.21 AS build
 WORKDIR /app
 
 # copy package files first for better caching
-COPY package.json package-lock.json ./
+COPY package.json ./
 RUN npm ci 
 
 # copy rest of app

@@ -5,11 +5,11 @@ WORKDIR /app
 
 # copy package files first for better caching
 COPY package.json package-lock.json ./
-RUN npm ci --only=production
+RUN npm ci 
 
 # copy rest of app
 COPY . .
-RUN npm run build --configuration=production
+RUN npm run build 
 
 # stage 2
 FROM nginx:1.27.4-alpine3.21

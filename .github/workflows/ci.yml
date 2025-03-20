@@ -63,6 +63,11 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=$(git rev-parse --short=8 HEAD)" >> $GITHUB_ENV
 
+      - name: Set up Docker BuildKit
+        run: |
+          echo "DOCKER_BUILDKIT=1" >> $GITHUB_ENV  # Enable BuildKit
+          docker buildx create --use  # Use BuildKit builder
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:

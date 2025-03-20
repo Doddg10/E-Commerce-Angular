@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build 
 
 # stage 2
-FROM nginx:1.26-alpine3.21
+FROM nginx:1.27.4-alpine3.21
 
 # change directries permissions
 RUN chmod 770 /var/cache/nginx/

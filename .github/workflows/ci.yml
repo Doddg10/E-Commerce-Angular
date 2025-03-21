@@ -29,7 +29,7 @@ jobs:
         run: npm test -- --watch=false --code-coverage=true
 
       - name: Upload Coverage Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: coverage-artifact
           path: coverage/        
@@ -94,7 +94,7 @@ jobs:
         run: echo "IMAGE_TAG=${{ secrets.DOCKERHUB_USERNAME }}/angular-web:${{ env.SHORT_SHA }}" >> $GITHUB_ENV  
         
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: build-artifact
           path: dist/         
@@ -126,7 +126,7 @@ jobs:
   #         script: |
   #           cd /path/to/your/kubernetes/manifests
   #           kubectl apply -f deployment.yaml
-  
+
   # e2e:
   #   name: Run E2E Tests with Cypress
   #   runs-on: ubuntu-latest

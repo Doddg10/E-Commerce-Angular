@@ -1,4 +1,4 @@
-name: Build, Test, and Push Docker Image
+name: Build, Test, and Deploy
 
 on:
   push:
@@ -46,10 +46,12 @@ jobs:
         run: npm ci
 
       - name: Run ESLint
-        run: npm run lint || echo "Lint issues detected, but continuing..."
+        run: |
+          npm run lint || echo "::warning:: ESLint issues detected, but continuing..."
 
       - name: Run Prettier
-        run: npm run format:check || echo "Prettier issues detected, but continuing..."
+        run: |
+          npm run format:check || echo "::warning:: Prettier issues detected, but continuing..."
 
   build:
     name: Build and Push Docker Image
@@ -62,11 +64,6 @@ jobs:
       - name: Get release version
         id: vars
         run: echo "SHORT_SHA=$(git rev-parse --short=8 HEAD)" >> $GITHUB_ENV
-
-      - name: Set up Docker BuildKit
-        run: |
-          echo "DOCKER_BUILDKIT=1" >> $GITHUB_ENV  # Enable BuildKit
-          docker buildx create --use  # Use BuildKit builder
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -82,4 +79,50 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/angular-web:${{ env.SHORT_SHA }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max #test
+          cache-to: type=gha,mode=max
+
+      - name: Save image tag to GitHub environment
+        run: echo "IMAGE_TAG=${{ secrets.DOCKERHUB_USERNAME }}/angular-web:${{ env.SHORT_SHA }}" >> $GITHUB_ENV  
+
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code  
+        uses: actions/checkout@v4
+
+      - name: Update deployment.yaml with the image tag
+        run: |
+          sed -i "s|DOCKER_IMAGE|${{ env.IMAGE_TAG }}|g" deployment.yaml
+
+      - name: Deploy using SSH & kubectl
+        uses: appleboy/ssh-action@v0.1.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          password: ${{ secrets.EC2_PASSWORD }}
+          port: 22
+          script: |
+            cd /path/to/your/kubernetes/manifests
+            kubectl apply -f deployment.yaml
+
+  e2e:
+    name: Run E2E Tests with Cypress
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Cypress Tests
+        run: npx cypress run --headless --browser chrome

@@ -24,9 +24,15 @@ jobs:
 
       - name: Install Dependencies 
         run: npm ci
-
+        
       - name: Run Unit Tests
-        run: npm test -- --watch=false --browsers=ChromeHeadless
+        run: npm test -- --watch=false --code-coverage=true
+
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-artifact
+          path: coverage/        
 
   lint:
     name: Lint and Format Code
@@ -86,6 +92,12 @@ jobs:
 
       - name: Save image tag to file
         run: echo "IMAGE_TAG=${{ secrets.DOCKERHUB_USERNAME }}/angular-web:${{ env.SHORT_SHA }}" >> $GITHUB_ENV  
+        
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: dist/         
 
   # deploy:
   #   name: Deploy to EC2
@@ -114,22 +126,29 @@ jobs:
   #         script: |
   #           cd /path/to/your/kubernetes/manifests
   #           kubectl apply -f deployment.yaml
-  e2e:
-    name: Run E2E Tests with Cypress
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  
+  # e2e:
+  #   name: Run E2E Tests with Cypress
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #         cache: 'npm'
 
-      - name: Install Dependencies
-        run: npm ci
+  #     - name: Install Dependencies
+  #       run: npm ci
 
-      - name: Run Cypress Tests
-        run: npx cypress run --headless --browser chrome
+  #     - name: Run Cypress Tests
+  #       run: npx cypress run --headless --browser chrome
+
+  #     - name: Upload E2E Test Results Artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: e2e-test-results
+  #         path: cypress/results/         

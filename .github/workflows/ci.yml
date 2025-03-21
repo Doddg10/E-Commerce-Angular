@@ -26,7 +26,7 @@ jobs:
         run: npm ci
         
       - name: Run Unit Tests
-        run: npm test -- --watch=false --code-coverage=true
+        run: npm test --code-coverage=true --headless --browser chrome 
 
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4

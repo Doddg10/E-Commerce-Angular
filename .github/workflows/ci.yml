@@ -7,10 +7,9 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   test:
-    name: Run Unit Tests
+    name: Build and run unit tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code  
@@ -25,6 +24,9 @@ jobs:
       - name: Install Dependencies 
         run: npm ci
         
+      - name: Build Angular Application
+        run: npm run build 
+        
       - name: Run Unit Tests
         run: npm test -- --watch=false --browsers=ChromeHeadless --code-coverage=true 
 
@@ -32,7 +34,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-artifact
-          path: coverage/        
+          path: coverage/
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: dist/  
+     
 
   lint:
     name: Lint and Format Code
@@ -93,11 +102,7 @@ jobs:
       - name: Save image tag to file
         run: echo "IMAGE_TAG=${{ secrets.DOCKERHUB_USERNAME }}/angular-web:${{ env.SHORT_SHA }}" >> $GITHUB_ENV  
         
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifact
-          path: dist/         
+    
 
   # deploy:
   #   name: Deploy to EC2

@@ -57,7 +57,7 @@ For detailed instructions on how to set up and run the pipeline, follow these st
      ```
    - You'll insert values for them in the playbook and it will automatically insert them into your repository as GitHub secrets.
 
-4. **Set Up AWS EC2 Instance (if using EC2)**:
+4. **Set Up AWS EC2 Instance**:
    - Ensure your EC2 instance has access to Docker and Kubernetes.
    - Configure the instance with a public IP for SSH access and ensure proper security group settings. Allow inbound traffic for necessary ports.
 
@@ -75,13 +75,13 @@ For detailed instructions on how to set up and run the pipeline, follow these st
    2. Ensure you can SSH into the EC2 instance.
    3. Run the Ansible playbook:
       ```bash
-      ansible-playbook -i inventory k3s-playbook.yaml --private-key angular-key.pem
+      ansible-playbook -i inventory k3s-playbook.yaml
       ```
 
    This will automate the entire Kubernetes installation process on your EC2 instance, making it ready for use in your CI/CD pipeline.
 
 5. **Run the CI Pipeline**:
-   - Once you push any changes to your repository, GitHub Actions will automatically trigger the CI pipeline.
+   - **Once you push any changes to your repository, GitHub Actions will automatically trigger the CI pipeline**.
    - The pipeline will:
      - Run linting and unit tests.
      - Build the Docker image.

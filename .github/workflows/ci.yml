@@ -124,6 +124,7 @@ jobs:
             kubectl rollout status deployment/angular-app
             kubectl get pods -l app=angular-app -o wide
 
+
   # e2e:
   #   name: Run E2E Tests with Cypress
   #   runs-on: ubuntu-latest

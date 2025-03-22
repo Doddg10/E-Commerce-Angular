@@ -119,7 +119,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+            export KUBECONFIG=/home/ubuntu/k3s.yaml
             kubectl set image deployment/angular-app angular-container=${{ needs.build.outputs.image_tag }}
             kubectl rollout status deployment/angular-app
             kubectl get pods -l app=angular-app -o wide

@@ -61,6 +61,8 @@ For detailed instructions on how to set up and run the pipeline, follow these st
    - Ensure your EC2 instance has access to Docker and Kubernetes.
    - Configure the instance with a public IP for SSH access and ensure proper security group settings. Allow inbound traffic for necessary ports.
 
+   ![Image](https://github.com/user-attachments/assets/c13b5566-a7ea-4dd2-aece-ab6cd452fb1b)
+
    The Ansible script does the following:
    1. **Install Dependencies**: It updates the system package manager (`apt`) and installs `curl`.
    2. **Install K3s**: It fetches and installs K3s using the official installation script from Rancher, ensuring that it’s set up with the appropriate configuration for your EC2 instance.

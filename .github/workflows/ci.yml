@@ -78,7 +78,7 @@ jobs:
 
       - name: Get release version
         id: vars
-        run: echo "SHORT_SHA=$(git rev-parse --short=8 HEAD)" >> $GITHUB_ENV
+        run: echo "SHORT_SHA=$(git rev-parse --short=8 HEAD)" >> $GITHUB_OUTPUT
 
       - name: Set up Docker BuildKit
         run: |
@@ -97,14 +97,15 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/angular-web:${{ env.SHORT_SHA }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/angular-web:${{ steps.vars.outputs.SHORT_SHA }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
 
       - name: Save image tag
         id: save_tag
         run: |
-          echo "image_tag=${{ secrets.DOCKERHUB_USERNAME }}/angular-web:${{ env.SHORT_SHA }}" >> $GITHUB_OUTPUT
+          echo "image_tag=${{ secrets.DOCKERHUB_USERNAME }}/angular-web:${{ steps.vars.outputs.SHORT_SHA }}" >> $GITHUB_OUTPUT
 
 
   deploy:

@@ -2,6 +2,8 @@
 
 This project implements a complete CI/CD pipeline for a web application using open-source tools. It automates building, testing, containerization, and deployment to a Kubernetes cluster.
 
+ **Note**: The Ansible scripts are available in the [Ansible Scripts repository](https://github.com/Doddg10/Ansible-Scripts).
+ 
 [How to Run](#how-to-run-steps)
 
 ## Features

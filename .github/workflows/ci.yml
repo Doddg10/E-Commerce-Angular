@@ -120,18 +120,21 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             export KUBECONFIG=/home/ubuntu/k3s.yaml
+            IMAGE_TAG=${{ needs.build.outputs.image_tag }}
+            echo "Using image tag: $IMAGE_TAG"
 
             if ! kubectl get deployment angular-app >/dev/null 2>&1; then
               echo "Deployment not found. Injecting image and applying deployment.yaml..."
-              sed "s|DOCKER_IMAGE|${{ needs.build.outputs.image_tag }}|g" /home/ubuntu/deployment.yaml > /home/ubuntu/deployment_final.yaml
+              sed "s|DOCKER_IMAGE|$IMAGE_TAG|g" /home/ubuntu/deployment.yaml > /home/ubuntu/deployment_final.yaml
               kubectl apply -f /home/ubuntu/deployment_final.yaml
             else
               echo "Deployment exists. Skipping apply."
-              kubectl set image deployment/angular-app angular-container=${{ needs.build.outputs.image_tag }}
+              kubectl set image deployment/angular-app angular-container=$IMAGE_TAG
             fi
 
             kubectl rollout status deployment/angular-app
             kubectl get pods -l app=angular-app -o wide
+
 
 
 

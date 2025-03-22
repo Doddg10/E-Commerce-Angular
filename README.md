@@ -2,6 +2,8 @@
 
 This project implements a complete CI/CD pipeline for a web application using open-source tools. It automates building, testing, containerization, and deployment to a Kubernetes cluster.
 
+[How to Run](#how-to-run-steps)
+
 ## Features
 
 - **CI with GitHub Actions**: Automates building and testing.
@@ -21,69 +23,16 @@ This project implements a complete CI/CD pipeline for a web application using op
 - **Testing**: ESLint, Karma, Jasmine, Cypress
 - **Artifact Storage**: GitHub Packages
 - **Secrets Management**: GitHub Secrets
-- **Automation**: Ansible/Puppet
-
-## 1. Setting Up the CI/CD Pipeline
-
-### 1.1 Forking the Repository
-
-The first step is to fork an open-source Angular project and integrate CI/CD.
-
-### 1.2 Setting Up CI with GitHub Actions
-
-- **Define GitHub Actions Workflow**: Create a `.github/workflows/ci.yml` file.
-- **Install Dependencies**: Use `npm ci` for caching optimization.
-- **Lint & Format Code**: Run ESLint and Prettier.
-- **Run Unit Tests**: Execute Karma & Jasmine tests in headless Chrome.
-- **Build Application**: Use `ng build` to generate production-ready files.
-- **Upload Artifacts**: Store build outputs in GitHub Packages.
-
-## 2. Containerization with Docker
-
-- **Create Dockerfile**: Define a lightweight image using Alpine or slim base images.
-- **Optimize Image**: Minimize layers and use multi-stage builds.
-- **Push Image**: Use GitHub Actions to push the image to Docker Hub.
-
-## 3. Running E2E Tests with Cypress
-
-- **Run Cypress in Headless Mode**: Automate browser tests in GitHub Actions.
-- **Store Cypress Test Results**: Upload logs and reports as build artifacts.
-
-## 4. Deploying to Kubernetes
-
-- **Use SSH to Connect to EC2**: Deploy Kubernetes manifests remotely.
-- **Configure Kubernetes Manifests**: Define `Deployment`, `Service`, and `Ingress`.
-- **Blue/Green Deployment**: Roll out updates with zero downtime.
-
-## 5. Performance & Security Testing
-
-- **Run Lighthouse Audits**: Check web performance and accessibility.
-- **Security Scanning**: Use tools like Trivy for container vulnerability scanning.
-
-## 6. Infrastructure as Code (IaC)
-
-- **Automate Setup with Ansible/Puppet**: Provision infrastructure and configure dependencies.
-
-## 7. Monitoring & Logging
-
-- **Enable Performance Monitoring**: Use Prometheus and Grafana.
-- **Centralized Logging**: Collect logs using Fluentd/Elasticsearch.
-
-## 8. Secrets Management
-
-- **Store Credentials Securely**: Use GitHub Secrets for DockerHub and EC2 credentials.
-
-## Conclusion
-
-This project demonstrates a fully automated CI/CD pipeline for a web application using open-source tools. 
-
+- **Automation**: Ansible
 
 ## How to Run
+
+For detailed instructions on how to set up and run the pipeline, follow these steps:
 
 1. **Fork the Repository**: Click the 'Fork' button at the top of this page.
 2. **Clone the Repo**: 
    ```bash
-   git clone https://github.com/yourusername/repo-name.git
+   git clone $repo_link
    cd repo-name
 3. **Set Up GitHub Secrets**: 
    - Go to your GitHub repository's settings.
@@ -110,26 +59,24 @@ This project demonstrates a fully automated CI/CD pipeline for a web application
 
 4. **Set Up AWS EC2 Instance (if using EC2)**:
    - Ensure your EC2 instance has access to Docker and Kubernetes.
-   - Configure the instance with a public IP for SSH access and ensure proper security group settings. allow inboud for 
-     ![Image](https://github.com/user-attachments/assets/c13b5566-a7ea-4dd2-aece-ab6cd452fb1b)
+   - Configure the instance with a public IP for SSH access and ensure proper security group settings. Allow inbound traffic for necessary ports.
 
+   The Ansible script does the following:
+   1. **Install Dependencies**: It updates the system package manager (`apt`) and installs `curl`.
+   2. **Install K3s**: It fetches and installs K3s using the official installation script from Rancher, ensuring that it’s set up with the appropriate configuration for your EC2 instance.
+   3. **Start K3s**: The script enables and starts the K3s service.
+   4. **Wait for Kubernetes to Be Ready**: It ensures that the K3s Kubernetes service is ready by checking the status of the nodes.
+   5. **Configure Kubeconfig**: The script creates a symlink to the K3s configuration file, sets the appropriate ownership, and ensures that the kubeconfig file uses the EC2 instance's public IP for accessing the Kubernetes cluster.
 
-     The Ansible script does the following:
-     1. **Install Dependencies**: It updates the system package manager (`apt`) and installs `curl`.
-     2. **Install K3s**: It fetches and installs K3s using the official installation script from Rancher, ensuring that it’s set up with the appropriate configuration for your EC2 instance.
-     3. **Start K3s**: The script enables and starts the K3s service.
-     4. **Wait for Kubernetes to Be Ready**: It ensures that the K3s Kubernetes service is ready by checking the status of the nodes.
-     5. **Configure Kubeconfig**: The script creates a symlink to the K3s configuration file, sets the appropriate ownership, and ensures that the kubeconfig file uses the EC2 instance's public IP for accessing the Kubernetes cluster.
+   **To run the playbook**:
+   1. Make sure you have Ansible installed on your local machine.
+   2. Ensure you can SSH into the EC2 instance.
+   3. Run the Ansible playbook:
+      ```bash
+      ansible-playbook -i inventory k3s-playbook.yaml --private-key angular-key.pem
+      ```
 
-     **To run the playbook**:
-     1. Make sure you have Ansible installed on your local machine.
-     2. Ensure you can SSH into the EC2 instance.
-     3. Run the Ansible playbook:
-        ```bash
-        ansible-playbook -i inventory k3s-playbook.yaml --private-key angular-key.pem
-        ```
-
-     This will automate the entire Kubernetes installation process on your EC2 instance, making it ready for use in your CI/CD pipeline.
+   This will automate the entire Kubernetes installation process on your EC2 instance, making it ready for use in your CI/CD pipeline.
 
 5. **Run the CI Pipeline**:
    - Once you push any changes to your repository, GitHub Actions will automatically trigger the CI pipeline.
@@ -140,9 +87,8 @@ This project demonstrates a fully automated CI/CD pipeline for a web application
      - Deploy the application to Kubernetes on Ubuntu EC2.
      - Run Cypress E2E tests.
 
-
 6. **Access the Application**:
-   - After the deployment, access your application using the EC2 Public IP and the NodePort from the deployment http://13.60.99.107:32320/
+   - After the deployment, access your application using the EC2 Public IP and the NodePort from the deployment. Example: `http://13.60.99.107:32320/`
 
 7. **Monitor and Debug**:
    - Check the GitHub Actions logs for each step of the CI/CD process.
@@ -166,7 +112,8 @@ This project demonstrates a fully automated CI/CD pipeline for a web application
           - Click on **Settings** > **Notifications**.
           - Under **Actions**, select **Email** for notifications on workflow failures or successes.
 
-     By enabling this feature, you will receive email alerts for both successful and failed CI/CD builds, keeping you informed of your workflow status directly in your inbox.
+   By enabling this feature, you will receive email alerts for both successful and failed CI/CD builds, keeping you informed of your workflow status directly in your inbox.
 
 ---
+
 **Authored by:** Doaa Gamal

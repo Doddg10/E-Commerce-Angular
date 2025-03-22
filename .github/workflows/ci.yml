@@ -112,7 +112,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: SSH into EC2 and deploy with kubectl set image
+      - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -120,8 +120,18 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             export KUBECONFIG=/home/ubuntu/k3s.yaml
+            
+            if ! kubectl get deployment angular-app >/dev/null 2>&1; then
+              echo "Deployment not found. Applying deployment.yaml..."
+              kubectl apply -f /home/ubuntu/deployment.yaml
+            else
+              echo "Deployment exists. Skipping apply."
+            fi
+
             kubectl set image deployment/angular-app angular-container=${{ needs.build.outputs.image_tag }}
+
             kubectl rollout status deployment/angular-app
+
             kubectl get pods -l app=angular-app -o wide
 
 

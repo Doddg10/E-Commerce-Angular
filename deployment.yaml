@@ -23,7 +23,7 @@ kind: Service
 metadata:
   name: angular-app-service
 spec:
-  type: LoadBalancer  # Use NodePort if LoadBalancer doesn't work
+  type: LoadBalancer  
   selector:
     app: angular-app
   ports:

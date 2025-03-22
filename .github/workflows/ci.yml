@@ -153,7 +153,7 @@ jobs:
         run: npx cypress run --headless --browser chrome
 
       - name: Upload E2E Test Results Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: e2e-test-results
           path: cypress/results/         

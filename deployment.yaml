@@ -23,10 +23,11 @@ kind: Service
 metadata:
   name: angular-app-service
 spec:
-  type: LoadBalancer  
+  type: NodePort
   selector:
     app: angular-app
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
+      nodePort: 32320

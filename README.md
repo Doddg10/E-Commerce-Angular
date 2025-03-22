@@ -3,7 +3,7 @@
 This project implements a complete CI/CD pipeline for a web application using open-source tools. It automates building, testing, containerization, and deployment to a Kubernetes cluster.
 
  **Note**: The Ansible scripts are available in the [Ansible Scripts repository](https://github.com/Doddg10/Ansible-Scripts).
- 
+
 [How to Run](#how-to-run-steps)
 
 ## Features
@@ -11,11 +11,11 @@ This project implements a complete CI/CD pipeline for a web application using op
 - **CI with GitHub Actions**: Automates building and testing.
 - **Containerization**: Uses Docker for builds and runs.
 - **Artifact Storage**: Stores build artifacts in GitHub Packages.
-- **Testing**: Unit tests, E2E tests with Cypress, and performance/security tests.
-- **Deployment**: Deploys to a Kubernetes cluster on EC2 with blue/green deployments.
+- **Testing**: Unit tests, E2E tests with Cypress.
+- **Deployment**: Deploys using K3S on EC2.
 - **Secrets Management**: Uses GitHub Secrets for storing credentials.
-- **Monitoring**: Implements performance and metrics monitoring.
-- **Infrastructure as Code (IaC)**: Automates pipeline setup with Ansible/Puppet.
+- **Monitoring**: Using github notifications to notify of pipeline progress. (Failure/Success/Cancellation)
+- **Infrastructure as Code (IaC)**: Automates K3S EC2 Setup and Repo Secrets injection with Ansible.
 
 ## Technologies Used
 
